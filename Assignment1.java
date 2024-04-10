@@ -1,17 +1,21 @@
-// for input form user
-import java.util.Scanner;
+    import java.util.Scanner;
 
 public class Assignment1 {
+    private static long registrationCounter = 1000L;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Assignment1 assignment1 = new Assignment1();
+
+        // Continuous loop for participant registration
         while (true) {
-            System.out.println("\nDo you want to input a new participant? (yes/no): ");
+            System.out.println("\nDo you want to register a new participant? (yes/no): ");
             String choice = scanner.nextLine().toLowerCase();
+
+            // Check if user wants to register or exit
             if (choice.equals("yes")) {
-                assignment1.takeAndDisplayParticipantInfo(scanner);
+                registerAndDisplayParticipantInfo(scanner);
             } else if (choice.equals("no")) {
-                System.out.println("Exiting program. Goodbye!");
+                System.out.println("Exiting registration. Goodbye!");
                 break;
             } else {
                 System.out.println("Invalid choice. Please enter 'yes' or 'no'.");
@@ -21,33 +25,46 @@ public class Assignment1 {
         scanner.close();
     }
 
-    // Method to take input and display Participant information
-    private void takeAndDisplayParticipantInfo(Scanner scanner) {
-        System.out.print("Enter participant name: ");
+    // Method to take input and display participant information
+    private static void registerAndDisplayParticipantInfo(Scanner scanner) {
+        System.out.print("Enter participant's full name: ");
         String name = scanner.nextLine();
 
         System.out.print("Enter contact number: ");
-        long contactNumber = scanner.nextLong();
-        scanner.nextLine(); // Consume the newline character
+        long contactNumber = getValidContactNumber(scanner);
 
-        System.out.print("Enter branch: ");
+        System.out.print("Enter participant's branch: ");
         String branch = scanner.nextLine();
 
-        createAndDisplayParticipant(name, contactNumber, branch);
+        // Display participant information
+        displayParticipantInfo(createParticipant(name, contactNumber, branch));
     }
 
-    // Method to create and display Participant object
-    private void createAndDisplayParticipant(String name, long contactNumber, String branch) {
-        Participant participant = new Participant(name, contactNumber, branch);
+    // Method to ensure valid contact number input
+    private static long getValidContactNumber(Scanner scanner) {
+        while (true) {
+            System.out.print("Enter contact number: ");
+            if (scanner.hasNextLong()) {
+                long contactNumber = scanner.nextLong();
+                scanner.nextLine(); // Consume the newline character
+                return contactNumber;
+            } else {
+                System.out.println("Invalid input. Please enter a valid contact number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }
+    }
 
-        // Displaying participant information
-        displayParticipantInfo(participant);
+    // Method to create participant with a unique registration ID
+    private static Participant createParticipant(String name, long contactNumber, String branch) {
+        Participant participant = new Participant(name, contactNumber, branch);
+        participant.generateRegistrationId(registrationCounter++);
+        return participant;
     }
 
     // Method to display participant information
-    private void displayParticipantInfo(Participant participant) {
-        System.out.println(
-                "Hi " + participant.getName() + "! Your registration ID is " + participant.getRegistrationId());
+    private static void displayParticipantInfo(Participant participant) {
+        System.out.println("Welcome, " + participant.getName() + "! Your registration ID is " + participant.getRegistrationId());
     }
 }
 
@@ -56,46 +73,30 @@ class Participant {
     private long contactNumber;
     private String branch;
     private String registrationId;
-    private static long counter;
 
-    static {
-        counter = 1000L;
-    }
-
+    // Constructor for creating a participant
     public Participant(String name, long contactNumber, String branch) {
         this.name = name;
         this.contactNumber = contactNumber;
         this.branch = branch;
-        generateRegistrationId();
     }
 
-    private void generateRegistrationId() {
-        counter++;
-        registrationId = "D" + counter;
+    // Method to generate a unique registration ID
+    public void generateRegistrationId(long counter) {
+        this.registrationId = "D" + counter;
     }
 
+    // Getter methods for retrieving participant information
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public long getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(long contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
     public String getBranch() {
         return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
     }
 
     public String getRegistrationId() {
