@@ -1,4 +1,5 @@
-// Note this code can be optimised further but this is my personal solution while submitting on leetcode
+// Note this code can be optimised further but this was my personal solution while submitting on leetcode
+
 class Solution {
     public int[] twoSum(int[] nums, int target) {
         int result[] = new int[2];

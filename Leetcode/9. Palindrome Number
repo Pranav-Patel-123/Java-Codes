@@ -1,0 +1,21 @@
+// Note this code can be optimised further but this was my personal solution while submitting on leetcode
+class Solution {
+    public boolean isPalindrome(int x) {
+        if(x<0)
+            return false;
+
+        int num = 0;
+        int q = x, r = 0;
+        for(int i=1; q>0; i++){
+            num *= 10;
+            r = q%10;
+            q = q/10;
+            num += r;
+        }
+
+        if(num == x)
+            return true;
+        else
+            return false;
+    }
+}
