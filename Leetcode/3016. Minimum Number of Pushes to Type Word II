@@ -1,0 +1,82 @@
+class Solution {
+    public int minimumPushes(String word) {
+        char[] distinct = new char[word.length()];
+        char[] distinctSpecial = new char[4];
+        int[] distinctCount = new int[word.length()];
+        int[] distinctSpecialCount = new int[4];
+        int distinctIndex = 0, distinctSpecialIndex = 0, cost = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            int similarFound = 0;
+            char currentChar = word.charAt(i);
+            
+            if (currentChar == '0' || currentChar == '1' || currentChar == '*' || currentChar == '#') {
+                // Check if the current character is already present in the distinctSpecial array
+                for (int j = 0; j < distinctSpecialIndex; j++) {
+                    if (currentChar == distinctSpecial[j]) {
+                        similarFound = 1;
+                        break;
+                    }
+                }
+
+                if (similarFound == 0) {
+                    distinctSpecial[distinctSpecialIndex] = currentChar;
+
+                    // Count the number of similar characters
+                    int similarCount = 0;
+                    for (int j = 0; j < word.length(); j++) {
+                        if (distinctSpecial[distinctSpecialIndex] == word.charAt(j)) {
+                            similarCount++;
+                        }
+                    }
+                    distinctSpecialCount[distinctSpecialIndex] = similarCount;
+                    
+                    distinctSpecialIndex++;
+                }
+            } else {
+                // Check if the current character is already present in the distinct array
+                for (int j = 0; j < distinctIndex; j++) {
+                    if (currentChar == distinct[j]) {
+                        similarFound = 1;
+                        break;
+                    }
+                }
+
+                if (similarFound == 0) {
+                    distinct[distinctIndex] = currentChar;
+
+                    // Count the number of similar characters
+                    int similarCount = 0;
+                    for (int j = 0; j < word.length(); j++) {
+                        if (distinct[distinctIndex] == word.charAt(j)) {
+                            similarCount++;
+                        }
+                    }
+                    distinctCount[distinctIndex] = similarCount;
+                    
+                    distinctIndex++;
+                }
+            }
+        }
+
+        // Calculate the cost for distinct characters
+        Arrays.sort(distinctCount);
+        for (int i = 0; i < distinctIndex; i++) {
+            if (i < 8) {
+                cost += distinctCount[i];
+            } else if (i < 16) {
+                cost += distinctCount[i] * 2;
+            } else if (i < 24) {
+                cost += distinctCount[i] * 3;
+            } else {
+                cost += distinctCount[i] * 4;
+            }
+        }
+
+        for (int i = 0; i < distinctSpecialIndex; i++) {
+            cost += distinctSpecialCount[i]; // Each special character counts as 1 push
+        }
+
+        return cost;
+    }
+}
