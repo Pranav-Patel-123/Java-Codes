@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Solution {
     public int minimumPushes(String word) {
         char[] distinct = new char[word.length()];
@@ -60,19 +62,21 @@ class Solution {
         }
 
         // Calculate the cost for distinct characters
-        Arrays.sort(distinctCount);
+        Integer[] distinctCountInteger = Arrays.stream(distinctCount, 0, distinctIndex).boxed().toArray(Integer[]::new);
+        Arrays.sort(distinctCountInteger, Collections.reverseOrder());
         for (int i = 0; i < distinctIndex; i++) {
             if (i < 8) {
-                cost += distinctCount[i];
+                cost += distinctCountInteger[i];
             } else if (i < 16) {
-                cost += distinctCount[i] * 2;
+                cost += distinctCountInteger[i] * 2;
             } else if (i < 24) {
-                cost += distinctCount[i] * 3;
+                cost += distinctCountInteger[i] * 3;
             } else {
-                cost += distinctCount[i] * 4;
+                cost += distinctCountInteger[i] * 4;
             }
         }
 
+        // Add the cost for special characters
         for (int i = 0; i < distinctSpecialIndex; i++) {
             cost += distinctSpecialCount[i]; // Each special character counts as 1 push
         }
